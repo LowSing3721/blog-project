@@ -37,6 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'pure_pagination',
+    'rest_framework',
+    'django_filters',
+    'drf_yasg',
     'blog.apps.BlogConfig',
     'comment.apps.CommentConfig',
 ]
@@ -115,10 +119,40 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+# django-pure-pagination设置
+PAGINATION_SETTINGS = {
+    'PAGE_RANGE_DISPLAYED': 4,  # 分页条当前页前后应该显示的总页数（两边均匀分布，因此要设置为偶数），
+    'MARGIN_PAGES_DISPLAYED': 2,  # 分页条开头和结尾显示的页数
+    'SHOW_FIRST_PAGE_WHEN_INVALID': True,  # 当请求了不存在页，显示第一页
+}
+
+# django-rest-framework设置
+REST_FRAMEWORK = {
+    # 设置 DEFAULT_PAGINATION_CLASS 后，将全局启用分页，所有 List 接口的返回结果都会被分页。
+    # 如果想单独控制每个接口的分页情况，可不设置这个选项，而是在视图函数中进行配置
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    # 这个选项控制分页后每页的资源个数
+    "PAGE_SIZE": 10,
+    # API默认操作权限
+    'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAuthenticatedOrReadOnly'],
+    # 过滤器后端, 需要安装django_filters
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    # 限流类
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+    ],
+    # 限流频率
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '5/min',
+    }
+}
+

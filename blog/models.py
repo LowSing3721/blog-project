@@ -32,7 +32,7 @@ class Tag(models.Model):
 
 class Post(models.Model):
     """文章"""
-    title = models.CharField(max_length=70, verbose_name='标题')
+    title = models.CharField(max_length=70, verbose_name='标题', help_text='标题帮助')
     body = models.TextField(verbose_name='正文')
     created_time = models.DateTimeField(default=timezone.now, editable=False, verbose_name='发布时间')
     modified_time = models.DateTimeField(default=timezone.now, editable=False, verbose_name='最后修改时间')

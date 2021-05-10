@@ -1,3 +1,4 @@
-*/migrations/*
-*/tests/*
-*/tests.py
+**/migrations/**
+**/tests/**
+**/tests.py
+**/__pycache__/**

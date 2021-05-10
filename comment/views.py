@@ -1,8 +1,12 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.http import require_POST
 from django.contrib import messages
+from rest_framework.viewsets import GenericViewSet
+from rest_framework.mixins import ListModelMixin, CreateModelMixin
 
 from .forms import CommentForm
+from .models import Comment
+from .serializers import CommentSerializer
 from blog.models import Post
 
 
@@ -13,6 +17,7 @@ def comment(request, post_pk):
     if form.is_valid():
         # ModelForm的save方法用于提交表单数据至数据库, commit参数为False时不提交只返回绑定模型实例
         cm = form.save(commit=False)
+        # 将评论绑定至文章
         cm.post = post
         # 手动提交
         cm.save()
@@ -25,3 +30,9 @@ def comment(request, post_pk):
         'form': form,
         'post': post,
     })
+
+
+class CommentViewSet(ListModelMixin, CreateModelMixin, GenericViewSet):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    filter_fields = ['post']
