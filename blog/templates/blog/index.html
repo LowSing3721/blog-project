@@ -3,62 +3,44 @@
 {% block title %}博客主页{% endblock title %}
 
 {% block main %}
-    <a href="{% url 'blog:post-list' %}">测试</a>
     <main class="col-md-8">
-        {% for post in object_list %}
-        <article class="post post-{{ post.pk }}">
+        {% for blog in object_list %}
+        <article class="blog blog-{{ blog.pk }}">
             <header class="entry-header">
                 <h1 class="entry-title">
-                    <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+                    <a href="{{ blog.get_absolute_url }}">{{ blog.title }}</a>
                 </h1>
                 <div class="entry-meta">
-                    <span class="post-category"><a href="#">{{ post.category }}</a></span>
-                    <span class="post-date">
+                    <span class="blog-category"><a href="#">{{ blog.category }}</a></span>
+                    <span class="blog-date">
                         <a href="#">
                             <time class="entry-date" datetime="2012-11-09T23:15:57+00:00">
-                                {{ post.created_time }}
+                                {{ blog.created_time }}
                             </time>
                         </a>
                     </span>
-                    <span class="post-author"><a href="#">{{ post.author }}</a></span>
+                    <span class="blog-author"><a href="#">{{ blog.author }}</a></span>
                     <span class="comments-link">
-                        <a href="{{ post.get_absolute_url }}#comment-area">{{ post.comment_set.count }} 评论</a>
+                        <a href="{{ blog.get_absolute_url }}#comment-area">{{ blog.comment_set.count }} 评论</a>
                     </span>
-                    <span class="views-count"><a href="#">{{ post.page_view }} 阅读</a></span>
+                    <span class="views-count"><a href="#">{{ blog.page_view }} 阅读</a></span>
                 </div>
             </header>
             <div class="entry-content clearfix">
-                <p>{{ post.excerpt }}</p>
-                {# <p>{{ post.body | truncatechars:54 }}</p> #}
+                <p>{{ blog.excerpt }}</p>
+                {# <p>{{ blog.body | truncatechars:54 }}</p> #}
                 <div class="read-more cl-effect-14">
-                    <a href="{{ post.get_absolute_url }}" class="more-link">
+                    <a href="{{ blog.get_absolute_url }}" class="more-link">
                         继续阅读 <span class="meta-nav">→</span>
                     </a>
                 </div>
             </div>
         </article>
         {% empty %}
-        <div class="no-post">暂时还没有发布的文章！</div>
+        <div class="no-blog">暂时还没有发布的文章！</div>
         {% endfor %}
 
         <hr>
-        {# Django内置分页 #}
-        {% comment %}
-            {% if is_paginated %}
-                <div class="pagination-simple">
-                    <a href="?page=1">首页&nbsp;&nbsp;</a>
-                    {% if page_obj.has_previous %}
-                        <a href="?page={{ page_obj.previous_page_number }}">上一页&nbsp;&nbsp;</a>
-                    {% endif %}
-                    <span class="current">第 {{ page_obj.number }} 页 / 共 {{ paginator.num_pages }} 页&nbsp;&nbsp;</span>
-                    {% if page_obj.has_next %}
-                        <a href="?page={{ page_obj.next_page_number }}">下一页&nbsp;&nbsp;</a>
-                    {% endif %}
-                    <a href="?page={{ paginator.num_pages }}">尾页</a>
-                </div>
-            {% endif %}
-        {% endcomment %}
-
         {# django-pure-pagination分页 #}
         <div class="text-center pagination" style="width: 100%">
           <ul>

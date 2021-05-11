@@ -10,12 +10,20 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # 分页
     'pure_pagination',
+    # drf
     'rest_framework',
+    # 过滤器
     'django_filters',
+    # OpenAPI
     'drf_yasg',
+    # 验证码
+    'captcha',
+    # 博客
     'blog.apps.BlogConfig',
-    'comment.apps.CommentConfig',
+    # 登录/注册系统
+    'login',
 ]
 
 MIDDLEWARE = [
@@ -48,41 +56,20 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'blogproject.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/3.1/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'blogproject',
-        'USER': 'root',
-        'PASSWORD': 'root',
-    }
-}
-
-
-# Password validation
-# https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    # {
+    #     'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    # },
+    # {
+    #     'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    # },
+    # {
+    #     'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    # },
+    # {
+    #     'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    # },
 ]
-
-
-# Internationalization
-# https://docs.djangoproject.com/en/3.1/topics/i18n/
 
 LANGUAGE_CODE = 'zh-hans'
 
@@ -92,14 +79,15 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = False
-
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.1/howto/static-files/
+USE_TZ = True
 
 STATIC_URL = '/static/'
 
+# 自定义用户类
+AUTH_USER_MODEL = 'blog.MyUser'
+
+# 主页
+INDEX_URL = 'blog:list'
 
 # django-pure-pagination设置
 PAGINATION_SETTINGS = {

@@ -1,7 +1,6 @@
-from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from .models import Post, Category, Tag
+from .models import Blog, Category, Tag, MyUser, Comment
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -16,26 +15,32 @@ class TagSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class UserSerializer(serializers.ModelSerializer):
+class MyUserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
+        model = MyUser
         fields = ['id', 'username']
 
 
-class PostListSerializer(serializers.ModelSerializer):
+class BlogListSerializer(serializers.ModelSerializer):
     category = CategorySerializer()
-    author = UserSerializer()
+    author = MyUserSerializer()
 
     class Meta:
-        model = Post
+        model = Blog
         exclude = ['body', 'tags']
 
 
-class PostRetrieveSerializer(serializers.ModelSerializer):
+class BlogRetrieveSerializer(serializers.ModelSerializer):
     category = CategorySerializer()
-    author = UserSerializer()
-    tags = TagSerializer(many=True)  # 序列化的对象可能为多个时必须置many为True
+    author = MyUserSerializer()
+    tags = TagSerializer(many=True)
 
     class Meta:
-        model = Post
+        model = Blog
+        fields = '__all__'
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
         fields = '__all__'

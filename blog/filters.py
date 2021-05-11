@@ -1,9 +1,9 @@
 from django_filters import rest_framework as drf_filters
 
-from .models import Post, Category, Tag
+from .models import Blog, Category, Tag
 
 
-class PostFilter(drf_filters.FilterSet):
+class BlogFilter(drf_filters.FilterSet):
     # 等价于查询条件created_time__year
     created_year = drf_filters.NumberFilter(
         field_name="created_time", lookup_expr="year", label='年份', help_text='根据年份过滤'
@@ -17,6 +17,6 @@ class PostFilter(drf_filters.FilterSet):
     tags = drf_filters.ModelMultipleChoiceFilter(queryset=Tag.objects.all(), help_text='根据标签过滤')
 
     class Meta:
-        model = Post
+        model = Blog
         # category和tags不附加过滤条件的话直接传入, 也可直接通过视图集的filter_fields属性传入
         fields = ["category", "tags", "created_year", "created_month"]

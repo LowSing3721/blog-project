@@ -1,9 +1,9 @@
 <div class="widget widget-recent-posts">
 <h3 class="widget-title">最新文章</h3>
 <ul>
-  {% for post in recent_post_list %}
+  {% for blog in recent_blog_list %}
     <li>
-      <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+      <a href="{{ blog.get_absolute_url }}">{{ blog.title }}</a>
     </li>
   {% empty %}
     暂无文章！
