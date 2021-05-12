@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}创建博客{% endblock title %}
+
+{% block main %}
+    <form method="POST">
+        {% csrf_token %}
+        <p><input type="hidden" name="author" value="{{ user.pk }}"></p>
+        {{ form.as_p }}
+        <input type="submit" value="发布" />
+    </form>
+{% endblock main %}

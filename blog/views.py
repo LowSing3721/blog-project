@@ -2,10 +2,11 @@ import re
 
 from django.shortcuts import get_object_or_404, render, redirect
 from django.utils.text import slugify
-from django.views.generic import ListView, DetailView
+from django.utils.html import strip_tags
+from django.views.generic import ListView, DetailView, CreateView
 from django.db.models import Q
 from django.contrib import messages
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_POST, require_http_methods
 from django.contrib.auth.decorators import login_required
 from markdown import Markdown
 from markdown.extensions.toc import TocExtension
@@ -17,12 +18,12 @@ from .models import Blog, Category, Tag, Comment, MyUser
 from .serializers import BlogListSerializer, BlogRetrieveSerializer, TagSerializer,\
     CategorySerializer, CommentSerializer
 from .filters import BlogFilter
-from .forms import CommentForm
+from .forms import CommentForm, BlogForm
 
 
 class BlogListView(PaginationMixin, ListView):
     model = Blog
-    template_name = 'blog/index.html'
+    template_name = 'blog/list.html'
     paginate_by = 5
 
 
@@ -35,6 +36,9 @@ class BlogDetail(DetailView):
 
         # 文章阅读量+1
         blog.increase_pv()
+
+        # 防止XSS攻击: 在转换Markdown之前去除HTML标签
+        blog.body = strip_tags(blog.body)
 
         # 创建Markdown对象
         md = Markdown(extensions=[
@@ -69,8 +73,14 @@ class BlogFilterByCategoryView(BlogListView):
 
 class BlogFilterByTagView(BlogListView):
     def get_queryset(self):
-        tg = get_object_or_404(Tag, pk=self.kwargs.get('pk'))
-        return super().get_queryset().filter(tags=tg)
+        tag = get_object_or_404(Tag, pk=self.kwargs.get('pk'))
+        return super().get_queryset().filter(tags=tag)
+
+
+class BlogFilterByAuthor(BlogListView):
+    def get_queryset(self):
+        author = get_object_or_404(MyUser, pk=self.kwargs.get('pk'))
+        return super().get_queryset().filter(author=author)
 
 
 class BlogSearchView(BlogListView):
@@ -79,17 +89,40 @@ class BlogSearchView(BlogListView):
         return super().get_queryset().filter(Q(title__contains=query) | Q(body__contains=query))
 
 
+@require_http_methods(['GET', 'POST'])
+@login_required
+def new_blog(request):
+    if request.method == 'GET':
+        return render(request, 'blog/newblog.html', context={
+            'form': BlogForm()
+        })
+    else:
+        form = BlogForm(request.POST)
+        print(form)
+        if form.is_valid():
+            author = get_object_or_404(MyUser, pk=request.user.pk)
+            blog = form.save(commit=False)
+            blog.author = author
+            blog.save()
+            messages.add_message(request, messages.SUCCESS, '博客发布成功!', extra_tags='success')
+            return redirect(blog)
+        messages.add_message(request, messages.ERROR, '博客发布失败!', extra_tags='danger')
+        return render(request, 'blog/newblog.html', context={
+            'form': form
+        })
+
+
 @require_POST
 @login_required
-def comment(request, pk):
+def new_comment(request, pk):
     blog = get_object_or_404(Blog, pk=pk)
     user = get_object_or_404(MyUser, pk=request.user.pk)
     form = CommentForm(request.POST)
     if form.is_valid():
-        cm = form.save(commit=False)
-        cm.blog = blog
-        cm.user = user
-        cm.save()
+        comment = form.save(commit=False)
+        comment.blog = blog
+        comment.user = user
+        comment.save()
         messages.add_message(request, messages.SUCCESS, '评论发表成功!', extra_tags='success')
         return redirect(blog)
     else:

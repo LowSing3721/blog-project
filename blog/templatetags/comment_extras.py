@@ -1,4 +1,5 @@
 from django import template
+from django.utils.html import strip_tags
 from markdown import markdown
 
 from ..forms import CommentForm
@@ -24,7 +25,7 @@ def show_comments(context, blog):
     comment_list = Comment.objects.filter(blog=blog)
     # 支持Markdown
     for comment in comment_list:
-        comment.text = markdown(comment.text)
+        comment.text = markdown(strip_tags(comment.text))
     comment_count = comment_list.count()
     return {
         'comment_list': comment_list,

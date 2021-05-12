@@ -19,8 +19,10 @@ urlpatterns = [
     path('archive/<int:year>/<int:month>/', views.BlogFilterByCreatedTimeView.as_view(), name='archive'),
     path('category/<int:pk>/', views.BlogFilterByCategoryView.as_view(), name='category'),
     path('tag/<int:pk>/', views.BlogFilterByTagView.as_view(), name='tag'),
+    path('author/<int:pk>/', views.BlogFilterByAuthor.as_view(), name='author'),
+    path('create/', views.new_blog, name='create'),
     path('search', views.BlogSearchView.as_view(), name='search'),
-    path('comment/<int:pk>', views.comment, name='comment'),
+    path('comment/<int:pk>', views.new_comment, name='comment'),
 
     # API页面
     path("", include(router.urls)),

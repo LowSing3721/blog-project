@@ -149,7 +149,7 @@ def logout(request):
 #             validate_password(password)
 #         except ValidationError as ve:
 #             error_msg = ve
-#             return render(request, 'login/index.html', {'error_msg': error_msg})
+#             return render(request, 'login/list.html', {'error_msg': error_msg})
 #         user = User.objects.get(username=request.user.get('user_name'))
 #         user.password = make_password(password=password, salt='login')
 #         user.save()

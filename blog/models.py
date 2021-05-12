@@ -62,7 +62,7 @@ class Blog(models.Model):
     def save(self, *args, **kwargs):
         # 如果摘要为空则自动取前54个字符为摘要
         if not self.excerpt:
-            # 摘要去除Markdown标记: Markdown文本 -> HTML文本 -> 纯文本
+            # 去除Markdown标记: Markdown文本 -> HTML文本 -> 纯文本
             md = Markdown(extensions=[
                 'markdown.extensions.extra',
                 'markdown.extensions.codehilite',

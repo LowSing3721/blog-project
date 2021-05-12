@@ -80,7 +80,12 @@
                                 </li>
                                 {% if user.is_authenticated %}
                                     <li class="cl-effect-11">
-                                        <a href="#" data-hover="{{ user.username }}">{{ user.username }}</a>
+                                        <a href="{% url 'blog:author' user.pk %}" data-hover="{{ user.username }}">
+                                            {{ user.username }}
+                                        </a>
+                                    </li>
+                                    <li class="cl-effect-11">
+                                        <a href="{% url 'blog:create' %}" data-hover="写博客">写博客</a>
                                     </li>
                                     <li class="cl-effect-11">
                                         <a href="{% url 'login:logout' %}" data-hover="注销">注销</a>
